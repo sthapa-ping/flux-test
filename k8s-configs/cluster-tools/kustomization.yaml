@@ -16,6 +16,19 @@ resources:
 
 patchesStrategicMerge:
 
+
+# This should be deleted after populating the secrets for the product licenses
+- |-
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: core-dns-environment-variables
+  data:
+    TENANT_DOMAIN: suraj.ping-demo.com
+    REGION: us-west-2
+
+
+
 ### All secrets used by supporting tools ###
 - secrets.yaml
 
@@ -250,3 +263,4 @@ patchesJson6902:
 #    behavior: merge
 #    files:
 #      - containers.conf
+
