@@ -1,0 +1,253 @@
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+
+namespace: ping-cloud
+
+resources:
+# All ping resources will live in the ping-cloud namespace
+- https://github.com/sura8257/ping-cloud-base.git/k8s-configs/ping-cloud/test?ref=pdo-1133-core-dns
+
+images:
+- name: pingidentity/pingdirectory
+  newName: docker.io/pingidentity/pingdirectory
+- name: pingidentity/pingfederate
+  newName: docker.io/pingidentity/pingfederate
+- name: pingidentity/pingaccess
+  newName: docker.io/pingidentity/pingaccess
+
+generatorOptions:
+  disableNameSuffixHash: false
+
+configMapGenerator:
+
+# Create the config maps that hold the variable for triggering updates of PD servers
+- name: pingdirectory-last-update-config
+  envs:
+  - pingdirectory/env_vars
+
+# Create the config maps that hold the variable for triggering updates of PF servers
+- name: pingfederate-last-update-config
+  envs:
+  - pingfederate/env_vars
+
+# Create the config maps that hold the variable for triggering updates of PA servers
+- name: pingaccess-last-update-config
+  envs:
+  - pingaccess/env_vars
+
+# Pingdirectory
+- name: pingdirectory-environment-variables
+  behavior: merge
+  envs:
+  - env_vars
+  - pingdirectory/env_vars
+
+# Pingfederate
+- name: pingfederate-environment-variables
+  behavior: merge
+  envs:
+  - env_vars
+  - pingfederate/env_vars
+
+# PingAccess
+- name: pingaccess-environment-variables
+  behavior: merge
+  envs:
+  - env_vars
+  - pingaccess/env_vars
+
+patchesStrategicMerge:
+
+### All secrets used by Ping apps ###
+- secrets.yaml
+
+### Ping app known_hosts file ###
+
+- |-
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: known-hosts-config
+  data:
+    known_hosts: |
+      |1|SUgVy3TZ1OnT+Q31hKw8VT8FxpY=|JSyZRBIcoxADop2o/CQjtdkS/ZE= ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+
+### Ping cloud stack service account ###
+- |-
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: ping-serviceaccount
+    annotations:
+      purpose: service-account-for-ping-cloud-stack
+      
+
+
+
+patchesJson6902:
+
+### Ping Directory Last Update Config Map ###
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: pingdirectory
+  patch: |
+    - op: add
+      path: /spec/template/spec/containers/0/envFrom/-
+      value:
+        configMapRef:
+          name: pingdirectory-last-update-config
+
+### Ping Federate Admin Last Update Config Map ###
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: pingfederate-admin
+  patch: |
+    - op: add
+      path: /spec/template/spec/containers/0/envFrom/-
+      value:
+        configMapRef:
+          name: pingfederate-last-update-config
+
+### Ping Federate Engine Last Update Config Map ###
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: pingfederate
+  patch: |
+    - op: add
+      path: /spec/template/spec/containers/0/envFrom/-
+      value:
+        configMapRef:
+          name: pingfederate-last-update-config
+
+### Ping Access Admin Last Update Config Map ###
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: pingaccess-admin
+  patch: |
+    - op: add
+      path: /spec/template/spec/containers/0/envFrom/-
+      value:
+        configMapRef:
+          name: pingaccess-last-update-config
+
+### Ping Access Engine Last Update Config Map ###
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: pingaccess
+  patch: |
+    - op: add
+      path: /spec/template/spec/containers/0/envFrom/-
+      value:
+        configMapRef:
+          name: pingaccess-last-update-config
+
+### Ingress patches ###
+
+# pingaccess runtime
+- target:
+    group: extensions
+    version: v1beta1
+    kind: Ingress
+    name: pingaccess-ingress
+  patch: |
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: pingaccess.dev-suraj.ping-demo.com
+    - op: replace
+      path: /spec/rules/0/host
+      value: pingaccess.dev-suraj.ping-demo.com
+
+# pingaccess admin
+- target:
+    group: extensions
+    version: v1beta1
+    kind: Ingress
+    name: pingaccess-admin-ingress
+  patch: |
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: pingaccess-admin.dev-suraj.ping-demo.com
+    - op: replace
+      path: /spec/rules/0/host
+      value: pingaccess-admin.dev-suraj.ping-demo.com
+
+# pingaccess agent
+- target:
+    group: extensions
+    version: v1beta1
+    kind: Ingress
+    name: pingaccess-agent-ingress
+  patch: |
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: pingaccess-agent.dev-suraj.ping-demo.com
+    - op: replace
+      path: /spec/rules/0/host
+      value: pingaccess-agent.dev-suraj.ping-demo.com
+
+# pingfederate runtime
+- target:
+    group: extensions
+    version: v1beta1
+    kind: Ingress
+    name: pingfederate-ingress
+  patch: |
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: pingfederate.dev-suraj.ping-demo.com
+    - op: replace
+      path: /spec/rules/0/host
+      value: pingfederate.dev-suraj.ping-demo.com
+
+# pingfederate admin
+- target:
+    group: extensions
+    version: v1beta1
+    kind: Ingress
+    name: pingfederate-admin-ingress
+  patch: |
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: pingfederate-admin.dev-suraj.ping-demo.com
+    - op: replace
+      path: /spec/rules/0/host
+      value: pingfederate-admin.dev-suraj.ping-demo.com
+
+# pingdirectory admin
+- target:
+    version: v1
+    kind: Service
+    name: pingdirectory-admin
+  patch: |-
+    - op: replace
+      path: /metadata/annotations
+      value:
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb
+        service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+        external-dns.alpha.kubernetes.io/hostname: pingdirectory-admin.dev-suraj.ping-demo.com
+
+
+
+# pingdataconsole
+- target:
+    group: extensions
+    version: v1beta1
+    kind: Ingress
+    name: pingdataconsole-ingress
+  patch: |-
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: pingdataconsole.dev-suraj.ping-demo.com
+    - op: replace
+      path: /spec/rules/0/host
+      value: pingdataconsole.dev-suraj.ping-demo.com
