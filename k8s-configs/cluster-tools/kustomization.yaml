@@ -14,8 +14,6 @@ resources:
 - https://github.com/sura8257/ping-cloud-base.git/k8s-configs/cluster-tools/git-ops?ref=pdo-1133-core-dns
 - known-hosts-config.yaml
 
-- https://github.com/sura8257/ping-cloud-base.git/k8s-configs/cluster-tools/core-dns/dns?ref=pdo-1133-core-dns
-
 patchesStrategicMerge:
 
 ### All secrets used by supporting tools ###
