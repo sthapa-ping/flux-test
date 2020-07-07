@@ -26,7 +26,8 @@ patchesStrategicMerge:
   data:
     TENANT_DOMAIN: suraj.ping-demo.com
     REGION: us-west-2
-    PARENT_TENANT_DOMAIN: suraj.ping-demo.com
+    TENANT_DOMAIN: suraj.ping-demo.com
+    PARENT_TENANT_DOMAIN: ${PARENT_TENANT_DOMAIN}
 
 
 
