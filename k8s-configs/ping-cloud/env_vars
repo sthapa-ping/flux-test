@@ -1,5 +1,5 @@
 # Tweak these variables to point to a different server profiles repo/branch.
-SERVER_PROFILE_URL=git@github.com:pingidentity/ping-cloud-base.git
+SERVER_PROFILE_URL=git@github.com:sura8257/flux-test.git
 SERVER_PROFILE_BRANCH=dev
 
 # Ping admin configuration required for clustering
