@@ -245,3 +245,77 @@ metadata:
   name: nri-bundle-nrk8s-ksm
   namespace: newrelic
 $patch: delete
+
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: healthcheck-cluster-health
+  namespace: health
+$patch: delete
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    app: ping-cloud
+  name: pingaccess-periodic-backup
+  namespace: ping-cloud
+$patch: delete
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    app: ping-cloud
+  name: pingaccess-periodic-backup
+  namespace: ping-cloud
+$patch: delete
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    app: ping-cloud
+  name: pingaccess-was-periodic-backup
+  namespace: ping-cloud
+$patch: delete
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    app: ping-cloud
+    role: pingdirectory
+  name: pingdirectory-periodic-backup
+  namespace: ping-cloud
+$patch: delete
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    app: ping-cloud
+  name: pingfederate-periodic-backup
+  namespace: ping-cloud
+$patch: delete
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: Sync
+  labels:
+    app: ping-cloud
+    role: pingone-configurator
+  name: pingone-configurator
+  namespace: ping-cloud
+$patch: delete
+
