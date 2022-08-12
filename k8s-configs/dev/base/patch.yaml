@@ -271,16 +271,6 @@ kind: CronJob
 metadata:
   labels:
     app: ping-cloud
-  name: pingaccess-periodic-backup
-  namespace: ping-cloud
-$patch: delete
-
----
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  labels:
-    app: ping-cloud
   name: pingaccess-was-periodic-backup
   namespace: ping-cloud
 $patch: delete
