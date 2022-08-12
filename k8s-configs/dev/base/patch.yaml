@@ -248,21 +248,6 @@ $patch: delete
 
 
 ---
-apiVersion: batch/v1
-kind: Namespace
-metadata:
-  namespace: health
-$patch: delete
-
----
-#apiVersion: batch/v1
-#kind: CronJob
-#metadata:
-#  name: healthcheck-cluster-health
-#  namespace: health
-#$patch: delete
-
----
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -316,3 +301,10 @@ metadata:
   namespace: ping-cloud
 $patch: delete
 
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: healthcheck-cluster-health
+  namespace: health
+$patch: delete
