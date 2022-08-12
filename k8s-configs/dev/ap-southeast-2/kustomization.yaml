@@ -1,0 +1,19 @@
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+
+resources:
+- ../base
+- custom-resources
+
+generatorOptions:
+  disableNameSuffixHash: false
+
+configMapGenerator:
+
+# Pingcloud-metadata
+- name: pingcloud-metadata-environment-variables
+  behavior: merge
+  envs:
+  - ../base/env_vars
+  - env_vars
+
