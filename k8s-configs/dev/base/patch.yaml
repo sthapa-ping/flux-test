@@ -249,11 +249,18 @@ $patch: delete
 
 ---
 apiVersion: batch/v1
-kind: CronJob
+kind: Namespace
 metadata:
-  name: healthcheck-cluster-health
   namespace: health
 $patch: delete
+
+---
+#apiVersion: batch/v1
+#kind: CronJob
+#metadata:
+#  name: healthcheck-cluster-health
+#  namespace: health
+#$patch: delete
 
 ---
 apiVersion: batch/v1beta1
