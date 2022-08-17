@@ -9,7 +9,7 @@ PRIMARY_REGION=ap-southeast-2
 
 # Tenant domain suffix for customer for region
 # Primary region should have the same value for TENANT_DOMAIN and PRIMARY_TENANT_DOMAIN
-PRIMARY_TENANT_DOMAIN=suraj-a.ping-demo.com
+PRIMARY_TENANT_DOMAIN=suraj-b.ping-demo.com
 
 # Optional comma-separated list of the tenant domain suffixes of secondary regions used for
 # PingFederate adaptive clustering using the JGroups DNS_PING discovery protocol:
@@ -30,7 +30,7 @@ PRIMARY_TENANT_DOMAIN=suraj-a.ping-demo.com
 SECONDARY_TENANT_DOMAINS="suraj-b.ping-demo.com"
 
 # Region-independent URL used for DNS failover/routing
-GLOBAL_TENANT_DOMAIN=global.suraj-a.ping-demo.com
+GLOBAL_TENANT_DOMAIN=global.suraj-b.ping-demo.com
 
 ############################################################
 # S3 buckets
@@ -39,8 +39,8 @@ GLOBAL_TENANT_DOMAIN=global.suraj-a.ping-demo.com
 PING_ARTIFACT_REPO_URL=https://ping-artifacts.s3-us-west-2.amazonaws.com
 
 # Customer-specific log and backup URLs for region
-LOG_ARCHIVE_URL=s3://s3://suraj-a-cluster
-BACKUP_URL=s3://suraj-a-cluster
+LOG_ARCHIVE_URL=s3://s3://suraj-b-cluster
+BACKUP_URL=s3://suraj-b-cluster
 
 ############################################################
 # Platform event queue and SSM variables
@@ -78,7 +78,7 @@ K8S_GIT_BRANCH=PDO-4117-Add-Radius-Proxy
 ECR_REGISTRY_NAME=public.ecr.aws/r2h3l6e4
 
 # The tenant or customer name
-TENANT_NAME=suraj-a
+TENANT_NAME=suraj-b
 
 ############################################################
 # Server profile variables
@@ -170,8 +170,8 @@ ANSIBLE_BELUGA_IMAGE_TAG=v1.15-release-branch-latest
 ############################################################
 # Cluster name variables
 ############################################################
-CLUSTER_NAME=suraj-a
-CLUSTER_NAME_LC=suraj-a
+CLUSTER_NAME=suraj-b
+CLUSTER_NAME_LC=suraj-b
 
 ############################################################
 # Primary DNS zone

@@ -6,7 +6,7 @@ REGION=ap-southeast-2
 REGION_NICK_NAME=ap-southeast-2
 
 # Tenant domain suffix for customer for region
-TENANT_DOMAIN=suraj-a.ping-demo.com
+TENANT_DOMAIN=suraj-b.ping-demo.com
 
 # This variable's value will be used as the prefix to distinguish between worker apps for different CDEs for a
 # single P14C customer. All of these apps will be created within the "Administrators" environment in the tenant.
@@ -17,7 +17,7 @@ ENVIRONMENT_PREFIX=${TENANT_NAME}-${CLUSTER_STATE_REPO_BRANCH}-${REGION_NICK_NAM
 NEW_RELIC_ENVIRONMENT_NAME=${TENANT_NAME}_${ENV}_${REGION_NICK_NAME}_k8s-cluster
 
 # Customer-specific artifacts URL for region
-ARTIFACT_REPO_URL=s3://suraj-a-cluster
+ARTIFACT_REPO_URL=s3://suraj-b-cluster
 
 # Customer-specific region name
 CLUSTER_STATE_REPO_PATH=${REGION_NICK_NAME}
